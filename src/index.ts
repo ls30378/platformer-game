@@ -1,28 +1,31 @@
-
 import Phaser from "phaser";
-
-const config: Phaser.Types.Core.GameConfig = {
+import PlayScene from "./scenes/play.scene";
+import PreloadScene from "./scenes/preload.scene";
+const WIDTH = document.body.offsetWidth;
+const HEIGHT = 600;
+const MAP_WIDTH = 1600;
+// const BIRD_POSITION = { x: WIDTH / 10, y: HEIGHT / 2 };
+const SHARED_CONFIG = {
+  mapOffset: MAP_WIDTH > WIDTH ? MAP_WIDTH - WIDTH : 0,
+  width: WIDTH,
+  height: HEIGHT,
+  zoomFactor: 1.5,
+};
+const Scenes = [PreloadScene, PlayScene];
+const initScenes = () => Scenes.map((scene) => new scene(SHARED_CONFIG));
+const config = {
   type: Phaser.AUTO,
-  width: 800,
-  height: 600,
+  width: WIDTH,
+  height: HEIGHT,
+  pixelArt: true,
   physics: {
-    default: 'arcade',
+    default: "arcade",
     arcade: {
-      gravity: { y: 200 }
-    }
+      debug: true,
+      // gravity: { y: 400 },
+    },
   },
-  scene: {
-    preload: preload,
-    create: create
-  }
+  scene: initScenes(),
 };
 
 new Phaser.Game(config);
-
-function preload () {
-  this.load.image('sky', 'assets/sky.png');
-}
-
-function create () {
-  this.add.image(400, 300, 'sky');
-}
