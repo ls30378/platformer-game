@@ -1,5 +1,6 @@
 import Phaser from "phaser";
 import collidable from "../mixins/collidable";
+import PlayScene from "../scenes/play.scene";
 
 class Enemy extends Phaser.Physics.Arcade.Sprite {
   gravity: number;
@@ -8,6 +9,7 @@ class Enemy extends Phaser.Physics.Arcade.Sprite {
   speed: number;
   currentPatrolDistance: number;
   maxPatrolDistance: number;
+  config: any;
   raycast: (
     body: Phaser.Physics.Arcade.Body | Phaser.Physics.Arcade.StaticBody,
     layer: Phaser.Tilemaps.DynamicTilemapLayer,
@@ -26,6 +28,7 @@ class Enemy extends Phaser.Physics.Arcade.Sprite {
     super(scene, x, y, key);
     scene.physics.add.existing(this);
     scene.add.existing(this);
+    this.config = (scene as PlayScene).config;
     this.init();
     this.initEvents();
     Object.assign(this, collidable);
@@ -63,8 +66,10 @@ class Enemy extends Phaser.Physics.Arcade.Sprite {
       this.platformCollidersLayer,
       { raylength: 30, precision: 1, steepnes: 0.3 }
     );
-    this.rayGraphics.clear();
-    this.rayGraphics.strokeLineShape(ray);
+    if (this.config.debug && ray) {
+      this.rayGraphics.clear();
+      this.rayGraphics.strokeLineShape(ray);
+    }
     if (
       (!hasHit || this.currentPatrolDistance >= this.maxPatrolDistance) &&
       this.timeFromLastTurn + 200 < time

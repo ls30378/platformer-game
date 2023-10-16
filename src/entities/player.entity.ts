@@ -1,6 +1,7 @@
 import Phaser from "phaser";
 import initAnimations from "./anims/playerAnims";
 import collidable from "../mixins/collidable";
+import Enemy from "./enemy.entity";
 
 class Player extends Phaser.Physics.Arcade.Sprite {
   cursors: Phaser.Types.Input.Keyboard.CursorKeys;
@@ -9,6 +10,8 @@ class Player extends Phaser.Physics.Arcade.Sprite {
   jumpCount: number;
   consecutiveJumps: number;
   addCollider: (otherGameObject: any, callback?: Function) => void;
+  hasBeenHit: boolean;
+  bounceVelocity: number;
   constructor(scene: Phaser.Scene, x: number, y: number) {
     super(scene, x, y, "player");
     scene.physics.add.existing(this);
@@ -19,6 +22,8 @@ class Player extends Phaser.Physics.Arcade.Sprite {
   }
   init() {
     this.jumpCount = 0;
+    this.hasBeenHit = false;
+    this.bounceVelocity = 250;
     this.consecutiveJumps = 1;
     this.gravity = 500;
     this.playerSpeed = 200;
@@ -34,6 +39,7 @@ class Player extends Phaser.Physics.Arcade.Sprite {
   }
 
   update() {
+    if (this.hasBeenHit) return;
     const { left, right, space, up } = this.cursors;
     const isSpaceJustDown = Phaser.Input.Keyboard.JustDown(space);
     const isUpJustDown = Phaser.Input.Keyboard.JustDown(up);
@@ -61,6 +67,38 @@ class Player extends Phaser.Physics.Arcade.Sprite {
         ? this.play("run", true)
         : this.play("idle", true)
       : this.play("jump", true);
+  }
+  takesHit(initator: any) {
+    if (this.hasBeenHit) return;
+    this.hasBeenHit = true;
+    this.bounceOff();
+    const hitAnim = this.playDamageTween();
+    this.scene.time.delayedCall(1000, () => {
+      this.hasBeenHit = false;
+      hitAnim.stop();
+      this.clearTint();
+    });
+    // this.scene.time.addEvent({
+    //   delay: 1000,
+    //   callback: () => {
+    //     this.hasBeenHit = false;
+    //   },
+    //   loop: false,
+    // });
+  }
+  playDamageTween() {
+    return this.scene.tweens.add({
+      targets: this,
+      duration: 100,
+      repeat: -1,
+      tint: 0xffffff,
+    });
+  }
+  bounceOff() {
+    this.setVelocity(
+      this.body.touching.right ? -this.bounceVelocity : this.bounceVelocity,
+      -this.bounceVelocity
+    );
   }
 }
 export default Player;

@@ -10,6 +10,7 @@ const SHARED_CONFIG = {
   width: WIDTH,
   height: HEIGHT,
   zoomFactor: 1.5,
+  debug: false,
 };
 const Scenes = [PreloadScene, PlayScene];
 const initScenes = () => Scenes.map((scene) => new scene(SHARED_CONFIG));
@@ -21,7 +22,7 @@ const config = {
   physics: {
     default: "arcade",
     arcade: {
-      debug: true,
+      debug: SHARED_CONFIG.debug,
       // gravity: { y: 400 },
     },
   },

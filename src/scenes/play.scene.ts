@@ -9,7 +9,7 @@ class PlayScene extends Phaser.Scene {
   tileHits: Phaser.Tilemaps.Tile[];
   graphics: Phaser.GameObjects.Graphics;
   line: Phaser.Geom.Line;
-  config;
+  config: any;
   playerSpeed: number;
   constructor(config: {
     zoomFactor: number;
@@ -22,13 +22,13 @@ class PlayScene extends Phaser.Scene {
   }
 
   update() {
-    if (this.plotting) {
-      const pointer = this.input.activePointer;
-      this.line.x2 = pointer.worldX;
-      this.line.y2 = pointer.worldY;
-      this.graphics.clear();
-      this.graphics.strokeLineShape(this.line);
-    }
+    // if (this.plotting) {
+    //   const pointer = this.input.activePointer;
+    //   this.line.x2 = pointer.worldX;
+    //   this.line.y2 = pointer.worldY;
+    //   this.graphics.clear();
+    //   this.graphics.strokeLineShape(this.line);
+    // }
   }
   preload() {}
 
@@ -58,13 +58,13 @@ class PlayScene extends Phaser.Scene {
     this.graphics = this.add.graphics();
     this.line = new Phaser.Geom.Line();
     this.graphics.lineStyle(1, 0x00ff00);
-    this.input.on("pointerdown", this.startDrawing, this);
-    this.input.on(
-      "pointerup",
-      (pointer: Phaser.Input.Pointer) =>
-        this.finishDrawing(pointer, layer.platform),
-      this
-    );
+    // this.input.on("pointerdown", this.startDrawing, this);
+    // this.input.on(
+    //   "pointerup",
+    //   (pointer: Phaser.Input.Pointer) =>
+    //     this.finishDrawing(pointer, layer.platform),
+    //   this
+    // );
   }
   drawDebug(layer: Phaser.Tilemaps.DynamicTilemapLayer) {
     const collidingTileColor = new Phaser.Display.Color(243, 134, 48, 100);
@@ -202,7 +202,10 @@ class PlayScene extends Phaser.Scene {
     }
   ) {
     enemies.addCollider(colliders.platformColliders);
-    enemies.addCollider(colliders.player);
+    enemies.addCollider(colliders.player, this.onPlayerCollision);
+  }
+  onPlayerCollision(enemy: any, player: Player) {
+    player.takesHit(enemy);
   }
 }
 
