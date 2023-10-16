@@ -1,7 +1,7 @@
 import Phaser from "phaser";
 import initAnimations from "./anims/playerAnims";
 import collidable from "../mixins/collidable";
-import Enemy from "./enemy.entity";
+import HealthBar from "../hud/healthbar";
 
 class Player extends Phaser.Physics.Arcade.Sprite {
   cursors: Phaser.Types.Input.Keyboard.CursorKeys;
@@ -12,6 +12,8 @@ class Player extends Phaser.Physics.Arcade.Sprite {
   addCollider: (otherGameObject: any, callback?: Function) => void;
   hasBeenHit: boolean;
   bounceVelocity: number;
+  health: number;
+  hp: HealthBar;
   constructor(scene: Phaser.Scene, x: number, y: number) {
     super(scene, x, y, "player");
     scene.physics.add.existing(this);
@@ -21,6 +23,8 @@ class Player extends Phaser.Physics.Arcade.Sprite {
     Object.assign(this, collidable);
   }
   init() {
+    this.health = 100;
+    this.hp = new HealthBar(this.scene, 0, 0, this.health);
     this.jumpCount = 0;
     this.hasBeenHit = false;
     this.bounceVelocity = 250;
