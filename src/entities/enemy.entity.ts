@@ -24,6 +24,7 @@ class Enemy extends Phaser.Physics.Arcade.Sprite {
   };
   addCollider: (otherGameObject: any, callback?: Function) => void;
   platformCollidersLayer: Phaser.Tilemaps.DynamicTilemapLayer;
+  damage: number;
   constructor(scene: Phaser.Scene, x: number, y: number, key: string) {
     super(scene, x, y, key);
     scene.physics.add.existing(this);
@@ -35,6 +36,7 @@ class Enemy extends Phaser.Physics.Arcade.Sprite {
   }
   init() {
     this.maxPatrolDistance = 100;
+    this.damage = 20;
     this.currentPatrolDistance = 0;
     this.gravity = 500;
     this.timeFromLastTurn = 0;

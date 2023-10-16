@@ -9,13 +9,31 @@ class PlayScene extends Phaser.Scene {
   tileHits: Phaser.Tilemaps.Tile[];
   graphics: Phaser.GameObjects.Graphics;
   line: Phaser.Geom.Line;
-  config: any;
   playerSpeed: number;
+  config: {
+    zoomFactor: number;
+    mapOffset: number;
+    width: number;
+    height: number;
+    debug: boolean;
+    leftTopCorner: {
+      y: number;
+      x: number;
+    };
+    rightTopCorner: {
+      y: number;
+      x: number;
+    };
+  };
+
   constructor(config: {
     zoomFactor: number;
     mapOffset: number;
     width: number;
     height: number;
+    debug: boolean;
+    leftTopCorner: { y: number; x: number };
+    rightTopCorner: { y: number; x: number };
   }) {
     super("PlayScene");
     this.config = config;
