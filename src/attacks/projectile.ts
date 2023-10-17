@@ -1,3 +1,4 @@
+import EffectManager from "../effects/effect-manager";
 import SpriteEffect from "../effects/spriteEffect";
 import Enemy from "../entities/enemy.entity";
 
@@ -7,6 +8,7 @@ class Projectile extends Phaser.Physics.Arcade.Sprite {
   maxDistance: number;
   cooldown: number;
   damage: number;
+  effectManager: EffectManager;
   constructor(scene: Phaser.Scene, x: number, y: number, key: string) {
     super(scene, x, y, key);
     scene.add.existing(this);
@@ -16,6 +18,8 @@ class Projectile extends Phaser.Physics.Arcade.Sprite {
     this.maxDistance = 300;
     this.traveledDistance = 0;
     this.cooldown = 1000;
+    this.body.setSize(this.width - 13, this.height - 20);
+    this.effectManager = new EffectManager(this.scene);
   }
   fire(x: number, y: number) {
     this.activateProjectile(true);
@@ -37,8 +41,9 @@ class Projectile extends Phaser.Physics.Arcade.Sprite {
   deliversHit(target: Enemy) {
     this.activateProjectile(false);
     this.traveledDistance = 0;
-    new SpriteEffect(this.scene, 0, 0, "hit-effect").playOn(target);
+    const impactPosition = { x: this.x, y: this.y };
     this.body.reset(0, 0);
+    this.effectManager.playEffectOn("hit-effect", target, impactPosition);
   }
   activateProjectile(status: boolean) {
     this.setActive(status);
