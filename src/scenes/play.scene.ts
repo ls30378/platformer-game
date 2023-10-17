@@ -3,6 +3,9 @@ import Player from "../entities/player.entity";
 import Birdman from "../entities/birdman.entity";
 import { getEnemyTypes } from "../types";
 import Enemies from "../groups/enemies.group";
+import Enemy from "../entities/enemy.entity";
+import Projectile from "../attacks/projectile";
+import initAnims from "../anims/index";
 
 class PlayScene extends Phaser.Scene {
   plotting: Boolean;
@@ -72,6 +75,7 @@ class PlayScene extends Phaser.Scene {
     });
     this.createEndOfLevel(playerZones.end, player);
     this.setupFollowupCameraOn(player);
+
     this.plotting = false;
     this.graphics = this.add.graphics();
     this.line = new Phaser.Geom.Line();
@@ -83,6 +87,7 @@ class PlayScene extends Phaser.Scene {
     //     this.finishDrawing(pointer, layer.platform),
     //   this
     // );
+    initAnims(this.anims);
   }
   drawDebug(layer: Phaser.Tilemaps.DynamicTilemapLayer) {
     const collidingTileColor = new Phaser.Display.Color(243, 134, 48, 100);
@@ -211,6 +216,9 @@ class PlayScene extends Phaser.Scene {
     return enemies;
   }
 
+  onWeaponHit(entity: Enemy, source: Projectile) {
+    entity.takesHit(source);
+  }
   createEnemyColliders(
     enemies: Enemies,
     {
@@ -221,8 +229,9 @@ class PlayScene extends Phaser.Scene {
   ) {
     enemies.addCollider(colliders.platformColliders);
     enemies.addCollider(colliders.player, this.onPlayerCollision);
+    enemies.addCollider(colliders.player.projectiles, this.onWeaponHit);
   }
-  onPlayerCollision(enemy: any, player: Player) {
+  onPlayerCollision(enemy: Enemy, player: Player) {
     player.takesHit(enemy);
   }
 }

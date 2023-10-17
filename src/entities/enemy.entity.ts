@@ -1,6 +1,7 @@
 import Phaser from "phaser";
 import collidable from "../mixins/collidable";
 import PlayScene from "../scenes/play.scene";
+import Projectile from "../attacks/projectile";
 
 class Enemy extends Phaser.Physics.Arcade.Sprite {
   gravity: number;
@@ -25,6 +26,7 @@ class Enemy extends Phaser.Physics.Arcade.Sprite {
   addCollider: (otherGameObject: any, callback?: Function) => void;
   platformCollidersLayer: Phaser.Tilemaps.DynamicTilemapLayer;
   damage: number;
+  health: number;
   constructor(scene: Phaser.Scene, x: number, y: number, key: string) {
     super(scene, x, y, key);
     scene.physics.add.existing(this);
@@ -35,6 +37,7 @@ class Enemy extends Phaser.Physics.Arcade.Sprite {
     Object.assign(this, collidable);
   }
   init() {
+    this.health = 40;
     this.maxPatrolDistance = 100;
     this.damage = 20;
     this.currentPatrolDistance = 0;
@@ -86,6 +89,13 @@ class Enemy extends Phaser.Physics.Arcade.Sprite {
     platformCollidersLayer: Phaser.Tilemaps.DynamicTilemapLayer
   ) {
     this.platformCollidersLayer = platformCollidersLayer;
+  }
+  takesHit(source: Projectile) {
+    this.health -= source.damage;
+    source.deliversHit(this);
+    if (this.health <= 0) {
+      this.destroy();
+    }
   }
 }
 export default Enemy;
