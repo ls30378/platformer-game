@@ -3,6 +3,8 @@ import initAnimations from "./anims/playerAnims";
 import collidable from "../mixins/collidable";
 import HealthBar from "../hud/healthbar";
 import Enemy from "./enemy.entity";
+import Projectile from "../attacks/projectile";
+import Projectiles from "../attacks/projectiles";
 
 class Player extends Phaser.Physics.Arcade.Sprite {
   cursors: Phaser.Types.Input.Keyboard.CursorKeys;
@@ -15,6 +17,7 @@ class Player extends Phaser.Physics.Arcade.Sprite {
   bounceVelocity: number;
   health: number;
   hp: HealthBar;
+  projectiles: Projectiles;
   constructor(scene: Phaser.Scene, x: number, y: number) {
     super(scene, x, y, "player");
     scene.physics.add.existing(this);
@@ -24,6 +27,7 @@ class Player extends Phaser.Physics.Arcade.Sprite {
     Object.assign(this, collidable);
   }
   init() {
+    this.projectiles = new Projectiles(this.scene);
     this.health = 100;
     this.hp = new HealthBar(this.scene, 0, 0, 2, this.health);
     this.jumpCount = 0;
@@ -37,6 +41,10 @@ class Player extends Phaser.Physics.Arcade.Sprite {
     this.setGravityY(500);
     this.setCollideWorldBounds(true);
     initAnimations(this.scene.anims);
+    this.scene.input.keyboard.on("keydown-Q", () => {
+      const projectile = new Projectile(this.scene, this.x, this.y, "iceball");
+      projectile.fire();
+    });
   }
 
   initEvents() {
