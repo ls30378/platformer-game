@@ -18,6 +18,7 @@ class Player extends Phaser.Physics.Arcade.Sprite {
   health: number;
   hp: HealthBar;
   projectiles: Projectiles;
+  lastDirection: number;
   constructor(scene: Phaser.Scene, x: number, y: number) {
     super(scene, x, y, "player");
     scene.physics.add.existing(this);
@@ -37,13 +38,13 @@ class Player extends Phaser.Physics.Arcade.Sprite {
     this.gravity = 500;
     this.playerSpeed = 200;
     this.cursors = this.scene.input.keyboard.createCursorKeys();
+    this.lastDirection = Phaser.Physics.Arcade.FACING_RIGHT;
     this.setSize(20, 35);
     this.setGravityY(500);
     this.setCollideWorldBounds(true);
     initAnimations(this.scene.anims);
     this.scene.input.keyboard.on("keydown-Q", () => {
-      const projectile = new Projectile(this.scene, this.x, this.y, "iceball");
-      projectile.fire();
+      this.projectiles.fireProjectile(this);
     });
   }
 
@@ -61,7 +62,9 @@ class Player extends Phaser.Physics.Arcade.Sprite {
     if (left.isDown) {
       this.setVelocityX(-this.playerSpeed);
       this.setFlipX(true);
+      this.lastDirection = Phaser.Physics.Arcade.FACING_LEFT;
     } else if (right.isDown) {
+      this.lastDirection = Phaser.Physics.Arcade.FACING_RIGHT;
       this.setVelocityX(this.playerSpeed);
       this.setFlipX(false);
     } else {
