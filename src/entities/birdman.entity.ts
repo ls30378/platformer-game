@@ -2,6 +2,7 @@ import Phaser from "phaser";
 import collidable from "../mixins/collidable";
 import Enemy from "./enemy.entity";
 import initAnims from "./anims/birdAnims";
+import Projectile from "../attacks/projectile";
 
 class Birdman extends Enemy {
   gravity: number;
@@ -13,7 +14,12 @@ class Birdman extends Enemy {
   }
   update(time: number, delta: number) {
     super.update(time, delta);
+    if (this.isPlayingAnims("birdman-hurt")) return;
     this.play("birdman-idle", true);
+  }
+  takesHit(source: Projectile) {
+    super.takesHit(source);
+    this.play("birdman-hurt", true);
   }
 }
 export default Birdman;

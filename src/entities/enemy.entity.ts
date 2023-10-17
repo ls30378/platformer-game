@@ -2,6 +2,7 @@ import Phaser from "phaser";
 import collidable from "../mixins/collidable";
 import PlayScene from "../scenes/play.scene";
 import Projectile from "../attacks/projectile";
+import animsMixins from "../mixins/animsMixins";
 
 class Enemy extends Phaser.Physics.Arcade.Sprite {
   gravity: number;
@@ -11,6 +12,7 @@ class Enemy extends Phaser.Physics.Arcade.Sprite {
   currentPatrolDistance: number;
   maxPatrolDistance: number;
   config: any;
+  isPlayingAnims: (key: string) => boolean;
   raycast: (
     body: Phaser.Physics.Arcade.Body | Phaser.Physics.Arcade.StaticBody,
     layer: Phaser.Tilemaps.DynamicTilemapLayer,
@@ -35,6 +37,7 @@ class Enemy extends Phaser.Physics.Arcade.Sprite {
     this.init();
     this.initEvents();
     Object.assign(this, collidable);
+    Object.assign(this, animsMixins);
   }
   init() {
     this.health = 40;
