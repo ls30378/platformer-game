@@ -3,8 +3,8 @@ import initAnimations from "./anims/playerAnims";
 import collidable from "../mixins/collidable";
 import HealthBar from "../hud/healthbar";
 import Enemy from "./enemy.entity";
-import Projectile from "../attacks/projectile";
 import Projectiles from "../attacks/projectiles";
+import animsMixins from "../mixins/animsMixins";
 
 class Player extends Phaser.Physics.Arcade.Sprite {
   cursors: Phaser.Types.Input.Keyboard.CursorKeys;
@@ -19,6 +19,7 @@ class Player extends Phaser.Physics.Arcade.Sprite {
   hp: HealthBar;
   projectiles: Projectiles;
   lastDirection: number;
+  isPlayingAnims: (key: string) => boolean;
   constructor(scene: Phaser.Scene, x: number, y: number) {
     super(scene, x, y, "player");
     scene.physics.add.existing(this);
@@ -26,6 +27,7 @@ class Player extends Phaser.Physics.Arcade.Sprite {
     this.init();
     this.initEvents();
     Object.assign(this, collidable);
+    Object.assign(this, animsMixins);
   }
   init() {
     this.projectiles = new Projectiles(this.scene);
@@ -45,6 +47,7 @@ class Player extends Phaser.Physics.Arcade.Sprite {
     initAnimations(this.scene.anims);
     this.scene.input.keyboard.on("keydown-Q", () => {
       this.projectiles.fireProjectile(this);
+      this.play("throw", true);
     });
   }
 
@@ -78,6 +81,7 @@ class Player extends Phaser.Physics.Arcade.Sprite {
       this.jumpCount++;
     }
     if (onFloor) this.jumpCount = 0;
+    if (this.isPlayingAnims("throw")) return;
     onFloor
       ? this.body.velocity.x !== 0
         ? this.play("run", true)
