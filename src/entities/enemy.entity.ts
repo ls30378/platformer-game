@@ -51,8 +51,6 @@ class Enemy extends Phaser.Physics.Arcade.Sprite {
       lineStyle: { width: 2, color: 0xaa00aa },
     });
     this.setGravityY(500);
-    this.setSize(20, 45);
-    this.setOffset(10, 20);
     this.setImmovable();
     this.setCollideWorldBounds(true);
     this.setVelocityX(this.speed);
@@ -61,6 +59,7 @@ class Enemy extends Phaser.Physics.Arcade.Sprite {
   initEvents() {
     this.scene.events.on(Phaser.Scenes.Events.UPDATE, this.update, this);
   }
+
   update(time: number, delta: number) {
     if (this.getBounds().bottom > 600) {
       this.scene.events.removeListener(
