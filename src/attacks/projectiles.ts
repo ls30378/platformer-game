@@ -30,8 +30,8 @@ class Projectiles extends Phaser.Physics.Arcade.Group {
       projectile.setFlipX(false);
       centerX = center.x + 10;
     } else {
-      projectile.speed = -projectile.speed;
       projectile.setFlipX(true);
+      projectile.speed = -Math.abs(projectile.speed);
       centerX = center.x - 10;
     }
     projectile.fire(centerX, center.y);

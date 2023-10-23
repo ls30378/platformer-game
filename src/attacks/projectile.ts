@@ -1,5 +1,4 @@
 import EffectManager from "../effects/effect-manager";
-import SpriteEffect from "../effects/spriteEffect";
 import Enemy from "../entities/enemy.entity";
 
 class Projectile extends Phaser.Physics.Arcade.Sprite {

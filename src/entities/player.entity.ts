@@ -6,6 +6,7 @@ import Enemy from "./enemy.entity";
 import Projectiles from "../attacks/projectiles";
 import animsMixins from "../mixins/animsMixins";
 import MeleeWeapon from "../attacks/melee-weapon";
+import { getTimestamp } from "../utils/functions";
 
 class Player extends Phaser.Physics.Arcade.Sprite {
   cursors: Phaser.Types.Input.Keyboard.CursorKeys;
@@ -22,6 +23,7 @@ class Player extends Phaser.Physics.Arcade.Sprite {
   lastDirection: number;
   isPlayingAnims: (key: string) => boolean;
   meleeWeapon: MeleeWeapon;
+  timeFromLastSwing: number;
   constructor(scene: Phaser.Scene, x: number, y: number) {
     super(scene, x, y, "player");
     scene.physics.add.existing(this);
@@ -43,7 +45,7 @@ class Player extends Phaser.Physics.Arcade.Sprite {
     this.playerSpeed = 200;
     this.cursors = this.scene.input.keyboard.createCursorKeys();
     this.lastDirection = Phaser.Physics.Arcade.FACING_RIGHT;
-    this.meleeWeapon = new MeleeWeapon(this.scene, 0, 0, "sword-attack");
+    this.meleeWeapon = new MeleeWeapon(this.scene, 0, 0, "sword-default");
     this.setSize(20, 35);
     this.setGravityY(500);
     this.setCollideWorldBounds(true);
@@ -54,8 +56,14 @@ class Player extends Phaser.Physics.Arcade.Sprite {
     });
     this.scene.input.keyboard.on("keydown-E", () => {
       // this.projectiles.fireProjectile(this);
+      if (
+        this.timeFromLastSwing &&
+        this.timeFromLastSwing + this.meleeWeapon.attackSpeed > getTimestamp()
+      )
+        return;
       this.play("throw", true);
       this.meleeWeapon.swing(this);
+      this.timeFromLastSwing = getTimestamp();
     });
   }
 
@@ -108,14 +116,8 @@ class Player extends Phaser.Physics.Arcade.Sprite {
       hitAnim.stop();
       this.clearTint();
     });
-    // this.scene.time.addEvent({
-    //   delay: 1000,
-    //   callback: () => {
-    //     this.hasBeenHit = false;
-    //   },
-    //   loop: false,
-    // });
   }
+
   playDamageTween() {
     return this.scene.tweens.add({
       targets: this,
