@@ -34,7 +34,7 @@ class Player extends Phaser.Physics.Arcade.Sprite {
     Object.assign(this, animsMixins);
   }
   init() {
-    this.projectiles = new Projectiles(this.scene);
+    this.projectiles = new Projectiles(this.scene, "iceball");
     this.health = 100;
     this.hp = new HealthBar(this.scene, 0, 0, 2, this.health);
     this.jumpCount = 0;

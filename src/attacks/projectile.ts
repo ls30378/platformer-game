@@ -20,10 +20,12 @@ class Projectile extends Phaser.Physics.Arcade.Sprite {
     this.body.setSize(this.width - 13, this.height - 20);
     this.effectManager = new EffectManager(this.scene);
   }
-  fire(x: number, y: number) {
+  fire(x: number, y: number, anim?: string) {
     this.activateProjectile(true);
     this.body.reset(x, y);
     this.setVelocityX(this.speed);
+    if (!anim) return;
+    this.play(anim, true);
   }
   isOutOfRange() {
     return this.traveledDistance && this.traveledDistance >= this.maxDistance;

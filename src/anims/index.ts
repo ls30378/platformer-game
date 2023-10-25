@@ -17,4 +17,23 @@ export default (anims: Phaser.Animations.AnimationManager) => {
     frameRate: 10,
     repeat: 0,
   });
+  anims.create({
+    key: "fireball",
+    frames: [
+      {
+        frame: "fireball-1",
+        key: "fireball-1",
+      },
+      {
+        frame: "fireball-2",
+        key: "fireball-2",
+      },
+      {
+        frame: "fireball-3",
+        key: "fireball-3",
+      },
+    ],
+    frameRate: 10,
+    repeat: -1,
+  });
 };

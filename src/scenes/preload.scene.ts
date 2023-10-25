@@ -46,6 +46,9 @@ class PreloadScene extends Phaser.Scene {
       frameHeight: 32,
       spacing: 16,
     });
+    this.load.image("fireball-1", "assets/weapons/improved_fireball_001.png");
+    this.load.image("fireball-2", "assets/weapons/improved_fireball_002.png");
+    this.load.image("fireball-3", "assets/weapons/improved_fireball_003.png");
   }
 
   create() {

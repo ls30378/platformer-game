@@ -12,6 +12,7 @@ class Enemy extends Phaser.Physics.Arcade.Sprite {
   currentPatrolDistance: number;
   maxPatrolDistance: number;
   config: any;
+  lastDirection: number;
   isPlayingAnims: (key: string) => boolean;
   raycast: (
     body: Phaser.Physics.Arcade.Body | Phaser.Physics.Arcade.StaticBody,
@@ -93,6 +94,9 @@ class Enemy extends Phaser.Physics.Arcade.Sprite {
       this.timeFromLastTurn + 200 < time
     ) {
       this.setFlipX(!this.flipX);
+      this.lastDirection = !this.flipX
+        ? Phaser.Physics.Arcade.FACING_RIGHT
+        : Phaser.Physics.Arcade.FACING_LEFT;
       this.setVelocityX((this.speed = -this.speed));
       this.timeFromLastTurn = time;
       this.currentPatrolDistance = 0;
