@@ -36,4 +36,13 @@ export default (anims: Phaser.Animations.AnimationManager) => {
     frameRate: 14,
     repeat: 0,
   });
+  anims.create({
+    key: "slide",
+    frames: anims.generateFrameNumbers("player-slide", {
+      start: 0,
+      end: 2,
+    }),
+    frameRate: 20,
+    repeat: 0,
+  });
 };

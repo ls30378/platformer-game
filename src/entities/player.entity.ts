@@ -24,6 +24,8 @@ class Player extends Phaser.Physics.Arcade.Sprite {
   isPlayingAnims: (key: string) => boolean;
   meleeWeapon: MeleeWeapon;
   timeFromLastSwing: number;
+  sourceHeight: number;
+  isSliding: boolean;
   constructor(scene: Phaser.Scene, x: number, y: number) {
     super(scene, x, y, "player");
     scene.physics.add.existing(this);
@@ -34,7 +36,9 @@ class Player extends Phaser.Physics.Arcade.Sprite {
     Object.assign(this, animsMixins);
   }
   init() {
+    this.sourceHeight = this.body.height;
     this.projectiles = new Projectiles(this.scene, "iceball");
+    this.isSliding = false;
     this.health = 100;
     this.hp = new HealthBar(this.scene, 0, 0, 2, this.health);
     this.jumpCount = 0;
@@ -50,6 +54,24 @@ class Player extends Phaser.Physics.Arcade.Sprite {
     this.setGravityY(500);
     this.setCollideWorldBounds(true);
     initAnimations(this.scene.anims);
+    this.handleAttacks();
+    this.handleMovements();
+  }
+  handleMovements() {
+    this.scene.input.keyboard.on("keydown-DOWN", () => {
+      this.body.setSize(this.width, this.height / 2);
+      this.setOffset(0, this.height / 2);
+      this.setVelocityX(0);
+      this.play("slide", true);
+      this.isSliding = true;
+    });
+    this.scene.input.keyboard.on("keyup-DOWN", () => {
+      this.body.setSize(this.width, this.sourceHeight);
+      this.setOffset(0);
+      this.isSliding = false;
+    });
+  }
+  handleAttacks() {
     this.scene.input.keyboard.on("keydown-Q", () => {
       this.projectiles.fireProjectile(this, "iceball");
       this.play("throw", true);
@@ -72,12 +94,14 @@ class Player extends Phaser.Physics.Arcade.Sprite {
   }
 
   update() {
-    if (this.hasBeenHit) return;
-    const { left, right, space, up } = this.cursors;
+    if (this.hasBeenHit || this.isSliding) return;
+    const { left, right, space, up, down } = this.cursors;
     const isSpaceJustDown = Phaser.Input.Keyboard.JustDown(space);
     const isUpJustDown = Phaser.Input.Keyboard.JustDown(up);
     const onFloor = (this.body as Phaser.Physics.Arcade.Body).onFloor();
-
+    // if (down.isDown && onFloor) {
+    // } else {
+    // }
     if (left.isDown) {
       this.setVelocityX(-this.playerSpeed);
       this.setFlipX(true);
@@ -97,7 +121,7 @@ class Player extends Phaser.Physics.Arcade.Sprite {
       this.jumpCount++;
     }
     if (onFloor) this.jumpCount = 0;
-    if (this.isPlayingAnims("throw")) return;
+    if (this.isPlayingAnims("throw") || this.isPlayingAnims("slide")) return;
     onFloor
       ? this.body.velocity.x !== 0
         ? this.play("run", true)
