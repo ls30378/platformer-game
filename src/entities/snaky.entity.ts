@@ -13,13 +13,13 @@ class Snaky extends Enemy {
   attackDelay: number;
   constructor(scene: Phaser.Scene, x: number, y: number) {
     super(scene, x, y, "snaky");
-    initAnims(this.scene.anims);
   }
 
   init() {
     super.init();
     this.speed = 33;
 
+    initAnims(this.scene.anims);
     this.projectiles = new Projectiles(this.scene, "fireball-1");
     this.timeFromLastAttack = 0;
     this.attackDelay = this.getAttackDelay();

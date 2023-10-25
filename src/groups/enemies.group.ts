@@ -10,6 +10,17 @@ class Enemies extends Phaser.GameObjects.Group {
   getTypes() {
     return getEnemyTypes();
   }
+  getProjectiles() {
+    // const projectiles = new Phaser.GameObjects.Group(this.scene);
+    const projectiles: any = [];
+    const children = this.getChildren();
+    children.forEach(
+      (enemy) =>
+        (enemy as any).projectiles &&
+        projectiles.push((enemy as any).projectiles.getChildren())
+    );
+    return projectiles;
+  }
 }
 
 export default Enemies;

@@ -65,6 +65,7 @@ class PlayScene extends Phaser.Scene {
     this.createPlayerColliders(player, {
       colliders: {
         platformColliders: layer.platformColliders,
+        projectiles: enemies.getProjectiles(),
       },
     });
     this.createEnemyColliders(enemies, {
@@ -164,6 +165,7 @@ class PlayScene extends Phaser.Scene {
     }
   ) {
     player.addCollider(colliders.platformColliders);
+    // player.addCollider(colliders.projectiles, this.onWeaponHit);
   }
   createMap() {
     const map = this.make.tilemap({
