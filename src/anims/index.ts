@@ -18,6 +18,21 @@ export default (anims: Phaser.Animations.AnimationManager) => {
     repeat: 0,
   });
   anims.create({
+    key: "iceball",
+    frames: [
+      {
+        frame: "iceball-1",
+        key: "iceball-1",
+      },
+      {
+        frame: "iceball-2",
+        key: "iceball-2",
+      },
+    ],
+    frameRate: 10,
+    repeat: -1,
+  });
+  anims.create({
     key: "fireball",
     frames: [
       {

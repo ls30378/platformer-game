@@ -51,7 +51,7 @@ class Player extends Phaser.Physics.Arcade.Sprite {
     this.setCollideWorldBounds(true);
     initAnimations(this.scene.anims);
     this.scene.input.keyboard.on("keydown-Q", () => {
-      this.projectiles.fireProjectile(this);
+      this.projectiles.fireProjectile(this, "iceball");
       this.play("throw", true);
     });
     this.scene.input.keyboard.on("keydown-E", () => {
