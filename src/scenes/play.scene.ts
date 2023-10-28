@@ -32,6 +32,7 @@ class PlayScene extends Phaser.Scene {
     };
   };
   score: number;
+  hud: Hud;
 
   constructor(config: {
     zoomFactor: number;
@@ -59,7 +60,7 @@ class PlayScene extends Phaser.Scene {
 
   create() {
     initAnims(this.anims);
-    new Hud(this, 0, 0).setDepth(100);
+    this.hud = new Hud(this, 0, 0).setDepth(100);
     this.score = 0;
     const map = this.createMap();
     const layer = this.createLayers(map);
@@ -170,6 +171,7 @@ class PlayScene extends Phaser.Scene {
   }
   onCollect(entity: any, collectable: any) {
     this.score += collectable.score;
+    this.hud.updateScoreboard(this.score);
     collectable.disableBody(true, true);
   }
   createPlayerColliders(
