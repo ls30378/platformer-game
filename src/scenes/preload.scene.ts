@@ -56,6 +56,14 @@ class PreloadScene extends Phaser.Scene {
     this.load.image("fireball-1", "assets/weapons/improved_fireball_001.png");
     this.load.image("fireball-2", "assets/weapons/improved_fireball_002.png");
     this.load.image("fireball-3", "assets/weapons/improved_fireball_003.png");
+
+    this.load.image("diamond", "assets/collectibles/diamond.png");
+    this.load.image("diamond-1", "assets/collectibles/diamond_big_01.png");
+    this.load.image("diamond-2", "assets/collectibles/diamond_big_02.png");
+    this.load.image("diamond-3", "assets/collectibles/diamond_big_03.png");
+    this.load.image("diamond-4", "assets/collectibles/diamond_big_04.png");
+    this.load.image("diamond-5", "assets/collectibles/diamond_big_05.png");
+    this.load.image("diamond-6", "assets/collectibles/diamond_big_06.png");
   }
 
   create() {

@@ -54,10 +54,12 @@ class PlayScene extends Phaser.Scene {
   preload() {}
 
   create() {
+    initAnims(this.anims);
     const map = this.createMap();
     const layer = this.createLayers(map);
     const playerZones = this.getPlayerZones(layer.playerZones);
     const player = this.createPlayer(playerZones);
+    const collectables = this.createCollectables(layer.collectables);
     const enemies = this.createEnemies(
       layer.enemySpawns,
       layer.platformColliders
@@ -66,6 +68,7 @@ class PlayScene extends Phaser.Scene {
       colliders: {
         platformColliders: layer.platformColliders,
         projectiles: enemies.getProjectiles(),
+        collectables,
       },
     });
     this.createEnemyColliders(enemies, {
@@ -88,7 +91,14 @@ class PlayScene extends Phaser.Scene {
     //     this.finishDrawing(pointer, layer.platform),
     //   this
     // );
-    initAnims(this.anims);
+  }
+  createCollectables(collectables: Phaser.Tilemaps.ObjectLayer) {
+    const collectableLayers = this.physics.add.staticGroup();
+    collectables.objects.forEach((c) => {
+      collectableLayers.get(c.x, c.y, "diamond").setDepth(-1);
+    });
+    collectableLayers.playAnimation("diamond-shine");
+    return collectableLayers;
   }
   drawDebug(layer: Phaser.Tilemaps.DynamicTilemapLayer) {
     const collidingTileColor = new Phaser.Display.Color(243, 134, 48, 100);
@@ -156,6 +166,9 @@ class PlayScene extends Phaser.Scene {
       .setZoom(zoomFactor);
     this.cameras.main.startFollow(player);
   }
+  onCollect(entity: any, collectable: any) {
+    collectable.disableBody(true, true);
+  }
   createPlayerColliders(
     player: Player,
     {
@@ -165,6 +178,7 @@ class PlayScene extends Phaser.Scene {
     }
   ) {
     player.addCollider(colliders.platformColliders);
+    player.addOverlap(colliders.collectables, this.onCollect);
     // player.addCollider(colliders.projectiles, this.onWeaponHit);
   }
   createMap() {
@@ -181,12 +195,20 @@ class PlayScene extends Phaser.Scene {
       "platform-colliders",
       tileset1
     );
-    const env = map.createStaticLayer("env", tileset1);
+    const env = map.createStaticLayer("env", tileset1).setDepth(-2);
     const enemySpawns = map.getObjectLayer("enemy_spawns");
     const platform = map.createDynamicLayer("platforms", tileset1);
     const playerZones = map.getObjectLayer("player_zones").objects;
+    const collectables = map.getObjectLayer("collectables");
     platformColliders.setCollisionByExclusion([-1], true);
-    return { env, platform, platformColliders, playerZones, enemySpawns };
+    return {
+      env,
+      platform,
+      platformColliders,
+      playerZones,
+      enemySpawns,
+      collectables,
+    };
   }
   createPlayer(playerZones: {
     start: Phaser.Types.Tilemaps.TiledObject;

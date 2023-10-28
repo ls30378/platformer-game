@@ -1,6 +1,6 @@
 import Phaser from "phaser";
 import Enemy from "./enemy.entity";
-import initAnims from "./anims/birdAnims";
+import initAnims from "./anims/snakyAnims";
 import Projectile from "../attacks/projectile";
 import Projectiles from "../attacks/projectiles";
 

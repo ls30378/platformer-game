@@ -15,6 +15,7 @@ class Player extends Phaser.Physics.Arcade.Sprite {
   jumpCount: number;
   consecutiveJumps: number;
   addCollider: (otherGameObject: any, callback?: Function) => void;
+  addOverlap: (otherGameObject?: any, callback?: any, context?: any) => void;
   hasBeenHit: boolean;
   bounceVelocity: number;
   health: number;
