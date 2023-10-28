@@ -15,6 +15,9 @@ class CollectablesGroup extends Phaser.Physics.Arcade.StaticGroup {
       const collectable = this.get(c.x, c.y, "diamond");
       const objProps = c.properties && this.mapProperties(c.properties);
       collectable.score = objProps?.score || defaultScore;
+      collectable.setScale(
+        collectable.score > 1 ? collectable.score / 50 + 1 : 1
+      );
     });
   }
   mapProperties(propertiesList: any) {

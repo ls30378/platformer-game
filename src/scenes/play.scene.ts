@@ -8,6 +8,7 @@ import Projectile from "../attacks/projectile";
 import initAnims from "../anims/index";
 import Collectable from "../collectables/collectable.entity";
 import CollectablesGroup from "../groups/collectables.group";
+import Hud from "../hud";
 
 class PlayScene extends Phaser.Scene {
   plotting: Boolean;
@@ -58,6 +59,7 @@ class PlayScene extends Phaser.Scene {
 
   create() {
     initAnims(this.anims);
+    new Hud(this, 0, 0).setDepth(100);
     this.score = 0;
     const map = this.createMap();
     const layer = this.createLayers(map);
