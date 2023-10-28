@@ -6,6 +6,8 @@ import Enemies from "../groups/enemies.group";
 import Enemy from "../entities/enemy.entity";
 import Projectile from "../attacks/projectile";
 import initAnims from "../anims/index";
+import Collectable from "../collectables/collectable.entity";
+import CollectablesGroup from "../groups/collectables.group";
 
 class PlayScene extends Phaser.Scene {
   plotting: Boolean;
@@ -93,10 +95,8 @@ class PlayScene extends Phaser.Scene {
     // );
   }
   createCollectables(collectables: Phaser.Tilemaps.ObjectLayer) {
-    const collectableLayers = this.physics.add.staticGroup();
-    collectables.objects.forEach((c) => {
-      collectableLayers.get(c.x, c.y, "diamond").setDepth(-1);
-    });
+    const collectableLayers = new CollectablesGroup(this).setDepth(-1);
+    collectableLayers.addFromLayer(collectables);
     collectableLayers.playAnimation("diamond-shine");
     return collectableLayers;
   }

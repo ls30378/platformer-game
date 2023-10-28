@@ -161,6 +161,12 @@
                  "height":14,
                  "id":9,
                  "name":"",
+                 "properties":[
+                        {
+                         "name":"score",
+                         "type":"int",
+                         "value":5
+                        }],
                  "rotation":0,
                  "type":"",
                  "visible":true,
@@ -373,6 +379,12 @@
                  "y":415.011869436202
                 }],
          "opacity":1,
+         "properties":[
+                {
+                 "name":"score",
+                 "type":"int",
+                 "value":1
+                }],
          "type":"objectgroup",
          "visible":true,
          "x":0,
