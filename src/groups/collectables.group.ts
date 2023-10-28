@@ -8,9 +8,13 @@ class CollectablesGroup extends Phaser.Physics.Arcade.StaticGroup {
     });
   }
   addFromLayer(collectables: Phaser.Tilemaps.ObjectLayer) {
-    const props = this.mapProperties(collectables.properties);
+    const { score: defaultScore, type } = this.mapProperties(
+      collectables.properties
+    );
     collectables.objects.forEach((c) => {
-      this.get(c.x, c.y, "diamond");
+      const collectable = this.get(c.x, c.y, "diamond");
+      const objProps = c.properties && this.mapProperties(c.properties);
+      collectable.score = objProps?.score || defaultScore;
     });
   }
   mapProperties(propertiesList: any) {
