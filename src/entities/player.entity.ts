@@ -132,7 +132,7 @@ class Player extends Phaser.Physics.Arcade.Sprite {
   takesHit(initator: Enemy) {
     if (this.hasBeenHit) return;
     this.hasBeenHit = true;
-    this.bounceOff();
+    this.bounceOff(initator);
     const hitAnim = this.playDamageTween();
     this.health -= initator.damage ?? (initator as any)?.properties?.damage;
     this.hp.decrease(this.health);
@@ -151,11 +151,18 @@ class Player extends Phaser.Physics.Arcade.Sprite {
       tint: 0xffffff,
     });
   }
-  bounceOff() {
-    this.setVelocity(
-      this.body.touching.right ? -this.bounceVelocity : this.bounceVelocity,
-      -this.bounceVelocity
-    );
+  bounceOff(source: any) {
+    if (source?.body) {
+      this.setVelocity(
+        this.body.touching.right ? -this.bounceVelocity : this.bounceVelocity,
+        -this.bounceVelocity
+      );
+    } else {
+      this.setVelocity(
+        this.body.blocked.right ? -this.bounceVelocity : this.bounceVelocity,
+        -this.bounceVelocity
+      );
+    }
   }
 }
 export default Player;
