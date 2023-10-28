@@ -1,11 +1,11 @@
 export default {
-  addCollider(otherGameObject: any, callback?: Function) {
+  addCollider(otherGameObject: any, callback?: Function, context?: any) {
     this.scene.physics.add.collider(
       this,
       otherGameObject,
       callback,
       null,
-      this
+      context || this
     );
   },
   addOverlap(otherGameobject?: any, callback?: any, context?: any) {

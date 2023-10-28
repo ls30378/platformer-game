@@ -30,6 +30,7 @@ class PlayScene extends Phaser.Scene {
       x: number;
     };
   };
+  score: number;
 
   constructor(config: {
     zoomFactor: number;
@@ -57,6 +58,7 @@ class PlayScene extends Phaser.Scene {
 
   create() {
     initAnims(this.anims);
+    this.score = 0;
     const map = this.createMap();
     const layer = this.createLayers(map);
     const playerZones = this.getPlayerZones(layer.playerZones);
@@ -119,7 +121,6 @@ class PlayScene extends Phaser.Scene {
     this.line.x1 = pointer.worldX;
     this.line.y1 = pointer.worldY;
     this.plotting = true;
-    console.log("start drawing");
   }
 
   finishDrawing(
@@ -149,7 +150,6 @@ class PlayScene extends Phaser.Scene {
       .setOrigin(0, 1);
     const eolOverlap = this.physics.add.overlap(endZone, player, () => {
       eolOverlap.active = false;
-      console.log("over");
     });
   }
   getPlayerZones(playerZones: Phaser.Types.Tilemaps.TiledObject[]) {
@@ -167,6 +167,7 @@ class PlayScene extends Phaser.Scene {
     this.cameras.main.startFollow(player);
   }
   onCollect(entity: any, collectable: any) {
+    this.score += collectable.score;
     collectable.disableBody(true, true);
   }
   createPlayerColliders(
@@ -178,7 +179,7 @@ class PlayScene extends Phaser.Scene {
     }
   ) {
     player.addCollider(colliders.platformColliders);
-    player.addOverlap(colliders.collectables, this.onCollect);
+    player.addOverlap(colliders.collectables, this.onCollect, this);
     // player.addCollider(colliders.projectiles, this.onWeaponHit);
   }
   createMap() {
