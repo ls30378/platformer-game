@@ -2,6 +2,7 @@ import Phaser from "phaser";
 import PlayScene from "./scenes/play.scene";
 import PreloadScene from "./scenes/preload.scene";
 import MenuScene from "./scenes/menu.scene";
+import LevelScene from "./scenes/levels.scene";
 const WIDTH = document.body.offsetWidth;
 const HEIGHT = 600;
 const MAP_WIDTH = 1600;
@@ -23,7 +24,7 @@ const SHARED_CONFIG = {
   },
 };
 
-const Scenes = [PreloadScene, MenuScene, PlayScene];
+const Scenes = [PreloadScene, MenuScene, LevelScene, PlayScene];
 const initScenes = () => Scenes.map((scene) => new scene(SHARED_CONFIG));
 const config = {
   type: Phaser.AUTO,
