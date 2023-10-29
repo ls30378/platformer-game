@@ -20,6 +20,7 @@ class PlayScene extends Phaser.Scene {
   hud: Hud;
   skyImage: Phaser.GameObjects.TileSprite;
   spikesImage: Phaser.GameObjects.TileSprite;
+  collectSound: Phaser.Sound.BaseSound;
 
   constructor(config: ConfigType) {
     super("PlayScene");
@@ -56,6 +57,8 @@ class PlayScene extends Phaser.Scene {
   }
   create({ gameStatus }: { gameStatus: string }) {
     initAnims(this.anims);
+
+    this.collectSound = this.sound.add("coin-pickup", { volume: 0.2 });
     this.playMusic();
     if (gameStatus !== "PLAYER_LOOSE") this.createGameEvents();
     this.hud = new Hud(this, 0, 0).setDepth(100);
@@ -206,7 +209,9 @@ class PlayScene extends Phaser.Scene {
   }
   onCollect(entity: any, collectable: any) {
     this.score += collectable.score;
+
     this.hud.updateScoreboard(this.score);
+    this.collectSound.play();
     collectable.disableBody(true, true);
   }
   createPlayerColliders(
