@@ -78,6 +78,11 @@ class PreloadScene extends Phaser.Scene {
     this.load.image("bg-spikes-tileset", "assets/bg_spikes_tileset.png");
     this.load.image("back", "assets/back.png");
     this.load.audio("theme", "assets/music/theme_music.wav");
+    this.load.audio("projectile-launch", "assets/music/projectile_launch.wav");
+    this.load.audio("step", "assets/music/step_mud.wav");
+    this.load.audio("jump", "assets/music/jump.wav");
+    this.load.audio("swipe", "assets/music/swipe.wav");
+    this.load.audio("coin-pickup", "assets/music/coine_pickup.wav");
     this.load.once("complete", () => this.startGame());
   }
   startGame() {

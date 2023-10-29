@@ -29,6 +29,10 @@ class Player extends Phaser.Physics.Arcade.Sprite {
   timeFromLastSwing: number;
   sourceHeight: number;
   isSliding: boolean;
+  jumpSound: Phaser.Sound.BaseSound;
+  projectileSound: Phaser.Sound.BaseSound;
+  stepSound: Phaser.Sound.BaseSound;
+  swipeSound: Phaser.Sound.BaseSound;
   constructor(scene: PlayScene, x: number, y: number) {
     super(scene, x, y, "player");
     scene.physics.add.existing(this);
@@ -53,6 +57,13 @@ class Player extends Phaser.Physics.Arcade.Sprite {
     this.cursors = this.scene.input.keyboard.createCursorKeys();
     this.lastDirection = Phaser.Physics.Arcade.FACING_RIGHT;
     this.meleeWeapon = new MeleeWeapon(this.scene, 0, 0, "sword-default");
+    this.jumpSound = this.scene.sound.add("jump", { volume: 0.2 });
+    this.projectileSound = this.scene.sound.add("projectile-launch", {
+      volume: 0.2,
+    });
+    this.stepSound = this.scene.sound.add("step", { volume: 0.2 });
+    this.swipeSound = this.scene.sound.add("swipe", { volume: 0.2 });
+
     this.setSize(20, 35);
     this.setGravityY(500);
     this.setCollideWorldBounds(true);
@@ -76,6 +87,7 @@ class Player extends Phaser.Physics.Arcade.Sprite {
   }
   handleAttacks() {
     this.scene.input.keyboard.on("keydown-Q", () => {
+      this.projectileSound.play();
       this.projectiles.fireProjectile(this, "iceball");
       this.play("throw", true);
     });
@@ -86,6 +98,7 @@ class Player extends Phaser.Physics.Arcade.Sprite {
         this.timeFromLastSwing + this.meleeWeapon.attackSpeed > getTimestamp()
       )
         return;
+      this.swipeSound.play();
       this.play("throw", true);
       this.meleeWeapon.swing(this);
       this.timeFromLastSwing = getTimestamp();
@@ -123,6 +136,7 @@ class Player extends Phaser.Physics.Arcade.Sprite {
       (isSpaceJustDown || isUpJustDown) &&
       (onFloor || this.jumpCount < this.consecutiveJumps)
     ) {
+      this.jumpSound.play();
       this.setVelocityY(-this.playerSpeed * 1.5);
       this.jumpCount++;
     }
