@@ -22,7 +22,12 @@ const SHARED_CONFIG = {
     x: WIDTH / ZOOM_FACTOR + (WIDTH - WIDTH / ZOOM_FACTOR) / 2,
     y: (HEIGHT - HEIGHT / ZOOM_FACTOR) / 2,
   },
+  rightBottomCorner: {
+    x: WIDTH / ZOOM_FACTOR + (WIDTH - WIDTH / ZOOM_FACTOR) / 2,
+    y: HEIGHT / ZOOM_FACTOR + (HEIGHT - HEIGHT / ZOOM_FACTOR) / 2,
+  },
 };
+export type ConfigType = typeof SHARED_CONFIG;
 
 const Scenes = [PreloadScene, MenuScene, LevelScene, PlayScene];
 const initScenes = () => Scenes.map((scene) => new scene(SHARED_CONFIG));

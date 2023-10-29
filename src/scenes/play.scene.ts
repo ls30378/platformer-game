@@ -7,6 +7,7 @@ import initAnims from "../anims/index";
 import CollectablesGroup from "../groups/collectables.group";
 import Hud from "../hud";
 import emitter from "../events/emitter";
+import { ConfigType } from "..";
 
 class PlayScene extends Phaser.Scene {
   plotting: Boolean;
@@ -14,35 +15,13 @@ class PlayScene extends Phaser.Scene {
   graphics: Phaser.GameObjects.Graphics;
   line: Phaser.Geom.Line;
   playerSpeed: number;
-  config: {
-    zoomFactor: number;
-    mapOffset: number;
-    width: number;
-    height: number;
-    debug: boolean;
-    leftTopCorner: {
-      y: number;
-      x: number;
-    };
-    rightTopCorner: {
-      y: number;
-      x: number;
-    };
-  };
+  config: ConfigType;
   score: number;
   hud: Hud;
   skyImage: Phaser.GameObjects.TileSprite;
   spikesImage: Phaser.GameObjects.TileSprite;
 
-  constructor(config: {
-    zoomFactor: number;
-    mapOffset: number;
-    width: number;
-    height: number;
-    debug: boolean;
-    leftTopCorner: { y: number; x: number };
-    rightTopCorner: { y: number; x: number };
-  }) {
+  constructor(config: ConfigType) {
     super("PlayScene");
     this.config = config;
   }
@@ -104,6 +83,7 @@ class PlayScene extends Phaser.Scene {
         player,
       },
     });
+    this.createBackButton();
     this.createEndOfLevel(playerZones.end, player);
     this.setupFollowupCameraOn(player);
 
@@ -118,6 +98,21 @@ class PlayScene extends Phaser.Scene {
     //     this.finishDrawing(pointer, layer.platform),
     //   this
     // );
+  }
+  createBackButton() {
+    const btn = this.add
+      .image(
+        this.config.rightBottomCorner.x,
+        this.config.rightBottomCorner.y,
+        "back"
+      )
+      .setScrollFactor(0)
+      .setScale(2)
+      .setOrigin(1)
+      .setInteractive();
+    btn.on("pointerup", () => {
+      this.scene.start("MenuScene");
+    });
   }
   createCollectables(collectables: Phaser.Tilemaps.ObjectLayer) {
     const collectableLayers = new CollectablesGroup(this).setDepth(-1);
