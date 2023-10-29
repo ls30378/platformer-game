@@ -31,6 +31,8 @@ class PlayScene extends Phaser.Scene {
   };
   score: number;
   hud: Hud;
+  skyImage: Phaser.GameObjects.TileSprite;
+  spikesImage: Phaser.GameObjects.TileSprite;
 
   constructor(config: {
     zoomFactor: number;
@@ -50,27 +52,27 @@ class PlayScene extends Phaser.Scene {
     });
   }
   update() {
-    // if (this.plotting) {
-    //   const pointer = this.input.activePointer;
-    //   this.line.x2 = pointer.worldX;
-    //   this.line.y2 = pointer.worldY;
-    //   this.graphics.clear();
-    //   this.graphics.strokeLineShape(this.line);
-    // }
+    this.spikesImage.tilePositionX = this.cameras.main.scrollX * 0.3;
+    this.skyImage.tilePositionX = this.cameras.main.scrollX * 0.1;
   }
   preload() {}
   createBG(map: Phaser.Tilemaps.Tilemap) {
     const bgObject = map.getObjectLayer("distance_bg").objects[0];
-    this.add
+    this.spikesImage = this.add
       .tileSprite(
         bgObject.x,
         bgObject.y,
-        bgObject.width,
+        this.config.width,
         bgObject.height,
         "bg_spikes_dark"
       )
       .setOrigin(0, 1)
       .setDepth(-1)
+      .setScrollFactor(0, 1);
+    this.skyImage = this.add
+      .tileSprite(0, 0, this.config.width, 250, "sky-play")
+      .setOrigin(0, 0)
+      .setDepth(-2)
       .setScrollFactor(0, 1);
   }
   create({ gameStatus }: { gameStatus: string }) {
@@ -210,10 +212,13 @@ class PlayScene extends Phaser.Scene {
     });
     map.addTilesetImage("main_lev_build_1", "tiles-1");
     map.addTilesetImage("main_lev_build_2", "tiles-2");
+    map.addTilesetImage("bg_spikes_tileset", "bg-spikes-tileset");
     return map;
   }
   createLayers(map: Phaser.Tilemaps.Tilemap) {
     const tileset1 = map.getTileset("main_lev_build_1");
+    const bg = map.getTileset("bg_spikes_tileset");
+    map.createStaticLayer("distance", bg).setDepth(-2);
     const platformColliders = map.createDynamicLayer(
       "platform-colliders",
       tileset1
