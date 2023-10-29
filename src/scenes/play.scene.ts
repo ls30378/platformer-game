@@ -56,6 +56,7 @@ class PlayScene extends Phaser.Scene {
   }
   create({ gameStatus }: { gameStatus: string }) {
     initAnims(this.anims);
+    this.playMusic();
     if (gameStatus !== "PLAYER_LOOSE") this.createGameEvents();
     this.hud = new Hud(this, 0, 0).setDepth(100);
     this.score = 0;
@@ -98,6 +99,15 @@ class PlayScene extends Phaser.Scene {
     //     this.finishDrawing(pointer, layer.platform),
     //   this
     // );
+  }
+  playMusic() {
+    if (this.sound.get("theme")) return;
+    this.sound
+      .add("theme", {
+        loop: true,
+        volume: 0.3,
+      })
+      .play();
   }
   createBackButton() {
     const btn = this.add
