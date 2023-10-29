@@ -8,6 +8,7 @@ import animsMixins from "../mixins/animsMixins";
 import MeleeWeapon from "../attacks/melee-weapon";
 import { getTimestamp } from "../utils/functions";
 import EventEmmiter from "../events/emitter";
+import PlayScene from "../scenes/play.scene";
 
 class Player extends Phaser.Physics.Arcade.Sprite {
   cursors: Phaser.Types.Input.Keyboard.CursorKeys;
@@ -28,7 +29,7 @@ class Player extends Phaser.Physics.Arcade.Sprite {
   timeFromLastSwing: number;
   sourceHeight: number;
   isSliding: boolean;
-  constructor(scene: Phaser.Scene, x: number, y: number) {
+  constructor(scene: PlayScene, x: number, y: number) {
     super(scene, x, y, "player");
     scene.physics.add.existing(this);
     scene.add.existing(this);
@@ -98,6 +99,9 @@ class Player extends Phaser.Physics.Arcade.Sprite {
   update() {
     if (this.hasBeenHit || this.isSliding || !this.body) return;
     const { left, right, space, up, down } = this.cursors;
+    if (this.getBounds().top > (this.scene as PlayScene).config.height) {
+      EventEmmiter.emit("PLAYER_LOOSE");
+    }
     const isSpaceJustDown = Phaser.Input.Keyboard.JustDown(space);
     const isUpJustDown = Phaser.Input.Keyboard.JustDown(up);
     const onFloor = (this.body as Phaser.Physics.Arcade.Body).onFloor();
