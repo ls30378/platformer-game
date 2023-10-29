@@ -169,6 +169,7 @@ class PlayScene extends Phaser.Scene {
     const eolOverlap = this.physics.add.overlap(endZone, player, () => {
       eolOverlap.active = false;
       this.registry.inc("level", 1);
+      this.registry.inc("unlocked-levels", 1);
       this.scene.restart({ gameStatus: "LEVEL_COMPLETED" });
     });
   }
