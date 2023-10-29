@@ -59,13 +59,27 @@ class PlayScene extends Phaser.Scene {
     // }
   }
   preload() {}
-
+  createBG(map: Phaser.Tilemaps.Tilemap) {
+    const bgObject = map.getObjectLayer("distance_bg").objects[0];
+    this.add
+      .tileSprite(
+        bgObject.x,
+        bgObject.y,
+        bgObject.width,
+        bgObject.height,
+        "bg_spikes_dark"
+      )
+      .setOrigin(0, 1)
+      .setDepth(-1)
+      .setScrollFactor(0, 1);
+  }
   create({ gameStatus }: { gameStatus: string }) {
     initAnims(this.anims);
     if (gameStatus !== "PLAYER_LOOSE") this.createGameEvents();
     this.hud = new Hud(this, 0, 0).setDepth(100);
     this.score = 0;
     const map = this.createMap();
+    this.createBG(map);
     const layer = this.createLayers(map);
     const playerZones = this.getPlayerZones(layer.playerZones);
     const player = this.createPlayer(playerZones);

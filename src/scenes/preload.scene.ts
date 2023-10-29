@@ -64,6 +64,8 @@ class PreloadScene extends Phaser.Scene {
     this.load.image("diamond-4", "assets/collectibles/diamond_big_04.png");
     this.load.image("diamond-5", "assets/collectibles/diamond_big_05.png");
     this.load.image("diamond-6", "assets/collectibles/diamond_big_06.png");
+
+    this.load.image("bg_spikes_dark", "assets/bg_spikes_dark.png");
   }
 
   create() {
