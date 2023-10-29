@@ -173,6 +173,8 @@ class PlayScene extends Phaser.Scene {
       .setOrigin(0, 1);
     const eolOverlap = this.physics.add.overlap(endZone, player, () => {
       eolOverlap.active = false;
+      this.registry.inc("level", 1);
+      this.scene.restart({ gameStatus: "LEVEL_COMPLETED" });
     });
   }
   getPlayerZones(playerZones: Phaser.Types.Tilemaps.TiledObject[]) {
@@ -180,6 +182,9 @@ class PlayScene extends Phaser.Scene {
       start: playerZones.filter((z) => z.name === "startZone")[0],
       end: playerZones.filter((z) => z.name === "endZone")[0],
     };
+  }
+  getCurrentLevel() {
+    return this.registry.get("level") || 1;
   }
   setupFollowupCameraOn(player: Player) {
     const { height, mapOffset, width, zoomFactor } = this.config;
@@ -208,7 +213,7 @@ class PlayScene extends Phaser.Scene {
   }
   createMap() {
     const map = this.make.tilemap({
-      key: "map",
+      key: `level-${this.getCurrentLevel()}`,
     });
     map.addTilesetImage("main_lev_build_1", "tiles-1");
     map.addTilesetImage("main_lev_build_2", "tiles-2");
