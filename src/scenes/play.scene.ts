@@ -1,14 +1,12 @@
 import Phaser from "phaser";
 import Player from "../entities/player.entity";
-import Birdman from "../entities/birdman.entity";
-import { getEnemyTypes } from "../types";
 import Enemies from "../groups/enemies.group";
 import Enemy from "../entities/enemy.entity";
 import Projectile from "../attacks/projectile";
 import initAnims from "../anims/index";
-import Collectable from "../collectables/collectable.entity";
 import CollectablesGroup from "../groups/collectables.group";
 import Hud from "../hud";
+import emitter from "../events/emitter";
 
 class PlayScene extends Phaser.Scene {
   plotting: Boolean;
@@ -46,7 +44,11 @@ class PlayScene extends Phaser.Scene {
     super("PlayScene");
     this.config = config;
   }
-
+  createGameEvents() {
+    emitter.on("PLAYER_LOOSE", () => {
+      this.scene.restart({ gameStatus: "PLAYER_LOOSE" });
+    });
+  }
   update() {
     // if (this.plotting) {
     //   const pointer = this.input.activePointer;
@@ -58,8 +60,9 @@ class PlayScene extends Phaser.Scene {
   }
   preload() {}
 
-  create() {
+  create({ gameStatus }: { gameStatus: string }) {
     initAnims(this.anims);
+    if (gameStatus !== "PLAYER_LOOSE") this.createGameEvents();
     this.hud = new Hud(this, 0, 0).setDepth(100);
     this.score = 0;
     const map = this.createMap();

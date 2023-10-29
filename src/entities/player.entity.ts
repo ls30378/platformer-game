@@ -7,6 +7,7 @@ import Projectiles from "../attacks/projectiles";
 import animsMixins from "../mixins/animsMixins";
 import MeleeWeapon from "../attacks/melee-weapon";
 import { getTimestamp } from "../utils/functions";
+import EventEmmiter from "../events/emitter";
 
 class Player extends Phaser.Physics.Arcade.Sprite {
   cursors: Phaser.Types.Input.Keyboard.CursorKeys;
@@ -95,7 +96,7 @@ class Player extends Phaser.Physics.Arcade.Sprite {
   }
 
   update() {
-    if (this.hasBeenHit || this.isSliding) return;
+    if (this.hasBeenHit || this.isSliding || !this.body) return;
     const { left, right, space, up, down } = this.cursors;
     const isSpaceJustDown = Phaser.Input.Keyboard.JustDown(space);
     const isUpJustDown = Phaser.Input.Keyboard.JustDown(up);
@@ -131,10 +132,15 @@ class Player extends Phaser.Physics.Arcade.Sprite {
   }
   takesHit(initator: Enemy) {
     if (this.hasBeenHit) return;
+    this.health -= initator.damage ?? (initator as any)?.properties?.damage;
+    if (this.health <= 0) {
+      EventEmmiter.emit("PLAYER_LOOSE");
+      this.hasBeenHit = false;
+      return;
+    }
+    const hitAnim = this.playDamageTween();
     this.hasBeenHit = true;
     this.bounceOff(initator);
-    const hitAnim = this.playDamageTween();
-    this.health -= initator.damage ?? (initator as any)?.properties?.damage;
     this.hp.decrease(this.health);
     this.scene.time.delayedCall(1000, () => {
       this.hasBeenHit = false;
