@@ -74,12 +74,13 @@ class PreloadScene extends Phaser.Scene {
 
     this.load.image("bg_spikes_dark", "assets/bg_spikes_dark.png");
     this.load.image("sky-play", "assets/sky_play.png");
+    this.load.image("menu-bg", "assets/background01.png");
     this.load.image("bg-spikes-tileset", "assets/bg_spikes_tileset.png");
     this.load.once("complete", () => this.startGame());
   }
   startGame() {
     this.registry.set("level", 1);
-    this.scene.start("PlayScene");
+    this.scene.start("MenuScene");
   }
   // create() {
   //   this.scene.start("PlayScene");
